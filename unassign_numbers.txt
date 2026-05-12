@@ -1,0 +1,5 @@
+$RAOId = (Get-CsOnlineApplicationInstance -Identity CL-SAN-Reception-AA@newmontmining.onmicrosoft.com).ObjectId
+
+New-CsTeamsUnassignedNumberTreatment -Identity "CL SAN Reception AA" -Pattern "\+562290(42|0(0[1-9]|[1-9][0-9])|1[0-8][0-9]|19[0-8])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 10
+
+

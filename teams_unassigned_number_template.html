@@ -1,0 +1,123 @@
+<style>
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .tbl th { text-align: left; font-weight: 500; font-size: 12px; color: var(--color-text-secondary); padding: 6px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .tbl td { padding: 5px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); vertical-align: middle; }
+  .tbl tr:last-child td { border-bottom: none; }
+  input[type=text] { width: 100%; box-sizing: border-box; font-size: 13px; padding: 4px 6px; }
+  input[type=text]::placeholder { color: var(--color-text-tertiary); font-style: italic; }
+  pre { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 14px 16px; font-size: 12px; font-family: var(--font-mono); white-space: pre-wrap; word-break: break-all; color: var(--color-text-primary); margin: 0; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); }
+  .row-num { font-size: 12px; color: var(--color-text-tertiary); font-weight: 500; width: 20px; }
+  .gen-btn { padding: 7px 18px; font-size: 13px; font-weight: 500; cursor: pointer; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); }
+  .gen-btn:hover { background: var(--color-background-secondary); }
+  .copy-btn { padding: 5px 12px; font-size: 12px; cursor: pointer; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); }
+  .copy-btn:hover { background: var(--color-background-secondary); }
+  .section-label { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin: 0 0 8px; }
+  .tip { font-size: 12px; color: var(--color-text-tertiary); margin: 6px 0 0; }
+</style>
+
+<h2 class="sr-only">PowerShell template generator for Teams unassigned number routing across 10 countries</h2>
+
+<div style="padding: 1rem 0;">
+
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+    <p class="section-label" style="margin:0;">Tenant domain</p>
+    <span class="badge">Used in all AA UPNs</span>
+  </div>
+  <input type="text" id="domain" placeholder="abc.onmicrosoft.com" style="max-width:300px; margin-bottom:20px;" oninput="generate()"/>
+
+  <p class="section-label">Country entries</p>
+
+  <div style="overflow-x:auto;">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th class="row-num">#</th>
+          <th style="min-width:90px;">Treatment identity <span class="badge" style="font-size:10px;">display name</span></th>
+          <th style="min-width:70px;">Site code <span class="badge" style="font-size:10px;">SL-{SITE}-Reception-AA</span></th>
+          <th style="min-width:180px;">Number pattern <span class="badge" style="font-size:10px;">regex</span></th>
+          <th style="min-width:60px;">Priority</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <p class="tip">Priority 1 = highest. Use unique integers per treatment to avoid conflicts.</p>
+
+  <div style="display:flex; gap:10px; margin-top:16px; align-items:center;">
+    <button class="gen-btn" onclick="generate()"><i class="ti ti-code" aria-hidden="true" style="font-size:15px; vertical-align:-2px; margin-right:5px;"></i>Generate script</button>
+    <button class="copy-btn" onclick="copyScript()"><i class="ti ti-copy" aria-hidden="true" style="font-size:14px; vertical-align:-2px; margin-right:4px;"></i>Copy</button>
+    <span id="copy-confirm" style="font-size:12px; color:var(--color-text-success); display:none;">Copied!</span>
+  </div>
+
+  <div style="margin-top:16px;">
+    <pre id="output">Fill in the fields above, then click Generate script.</pre>
+  </div>
+
+</div>
+
+<script>
+const defaults = [
+  { id: "EU CMB Reception AA",  site: "CMB", pattern: "\\+562290(42|0(0[1-9]|[1-9][0-9])|1[0-8][0-9]|19[0-8])$", pri: 1 },
+  { id: "", site: "", pattern: "", pri: 2 },
+  { id: "", site: "", pattern: "", pri: 3 },
+  { id: "", site: "", pattern: "", pri: 4 },
+  { id: "", site: "", pattern: "", pri: 5 },
+  { id: "", site: "", pattern: "", pri: 6 },
+  { id: "", site: "", pattern: "", pri: 7 },
+  { id: "", site: "", pattern: "", pri: 8 },
+  { id: "", site: "", pattern: "", pri: 9 },
+  { id: "", site: "", pattern: "", pri: 10 },
+];
+
+function buildRows() {
+  const tbody = document.getElementById('rows');
+  tbody.innerHTML = '';
+  defaults.forEach((d, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="row-num">${i+1}</td>
+      <td><input type="text" data-i="${i}" data-f="id" placeholder="EU LON Reception AA" value="${d.id}" oninput="update(this)"/></td>
+      <td><input type="text" data-i="${i}" data-f="site" placeholder="LON" value="${d.site}" oninput="update(this)"/></td>
+      <td><input type="text" data-i="${i}" data-f="pattern" placeholder="\\+442071234\\d{3}$" value="${d.pattern}" oninput="update(this)"/></td>
+      <td><input type="text" data-i="${i}" data-f="pri" placeholder="${i+1}" value="${d.pri}" style="max-width:50px;" oninput="update(this)"/></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function update(el) {
+  const i = +el.dataset.i, f = el.dataset.f;
+  defaults[i][f] = el.value;
+  generate();
+}
+
+function generate() {
+  const domain = document.getElementById('domain').value.trim() || 'abc.onmicrosoft.com';
+  const lines = [];
+  defaults.forEach((d, i) => {
+    const identity = d.id.trim() || `Country${i+1} Reception AA`;
+    const site = d.site.trim() || `SITE${i+1}`;
+    const pattern = d.pattern.trim() || `\\+000000000$`;
+    const pri = d.pri || (i+1);
+    const upn = `SL-${site}-Reception-AA@${domain}`;
+    lines.push(`# --- ${identity} ---`);
+    lines.push(`$RAOId = (Get-CsOnlineApplicationInstance -Identity ${upn}).ObjectId`);
+    lines.push(`New-CsTeamsUnassignedNumberTreatment \`\n  -Identity "${identity}" \`\n  -Pattern "${pattern}" \`\n  -TargetType ResourceAccount \`\n  -Target $RAOId \`\n  -TreatmentPriority ${pri}\n`);
+  });
+  document.getElementById('output').textContent = lines.join('\n');
+}
+
+function copyScript() {
+  const text = document.getElementById('output').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const c = document.getElementById('copy-confirm');
+    c.style.display = 'inline';
+    setTimeout(() => c.style.display = 'none', 2000);
+  });
+}
+
+buildRows();
+generate();
+</script>
