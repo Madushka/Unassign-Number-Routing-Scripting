@@ -1,5 +1,39 @@
-$RAOId = (Get-CsOnlineApplicationInstance -Identity CL-SAN-Reception-AA@newmontmining.onmicrosoft.com).ObjectId
+# --- DE BER Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-BER-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatment -Identity "DE BER Reception AA" -Pattern "\+4930(XXXXXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 1
 
-New-CsTeamsUnassignedNumberTreatment -Identity "CL SAN Reception AA" -Pattern "\+562290(42|0(0[1-9]|[1-9][0-9])|1[0-8][0-9]|19[0-8])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 10
+# --- FR PAR Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-PAR-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatment -Identity "FR PAR Reception AA" -Pattern "\+331(XXXXXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 2
 
+# --- IT ROM Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-ROM-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatment -Identity "IT ROM Reception AA" -Pattern "\+3906(XXXXXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 3
 
+# --- ES MAD Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-MAD-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatment -Identity "ES MAD Reception AA" -Pattern "\+3491(XXX XXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 4
+
+# --- NL AMS Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-AMS-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatment -Identity "NL AMS Reception AA" -Pattern "\+3120(XXXXXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 5
+  
+# --- PL WAW Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-WAW-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatment -Identity "PL WAW Reception AA" -Pattern "\+4822(XXXXXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 6
+
+# --- SE STO Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-STO-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatment -Identity "SE STO Reception AA" -Pattern "\+468(XXXXXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 7
+
+# --- GR ATH Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-ATH-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatment -Identity "GR ATH Reception AA" -Pattern "\+30210(XXXXXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 8
+
+# --- PT LIS Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-LIS-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatment -Identity "PT LIS Reception AA" -Pattern "\+35121(XXXXXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 9
+
+# --- IE DUB Reception AA ---
+$RAOId = (Get-CsOnlineApplicationInstance -Identity SL-DUB-Reception-AA@kloudnews-uc.onmicrosoft.com).ObjectId
+New-CsTeamsUnassignedNumberTreatmet -Identity "IE DUB Reception AA" -Pattern "\+3531(XXXXXX[0-9])$" -TargetType ResourceAccount -Target $RAOId -TreatmentPriority 10
